@@ -1,0 +1,24 @@
+current = 21
+sizes = [32, 64]
+
+[[board]]
+year = 21
+hex = 0xb21b21
+filled_in = true
+fat = true
+
+[[board]]
+year = 20
+hex = 0xfa6b20
+
+[[board]]
+year = 19
+hex = 0x197052
+
+[[board]]
+year = 18
+hex = 0x61518f
+
+[[board]]
+year = 17
+hex = 0x29738f

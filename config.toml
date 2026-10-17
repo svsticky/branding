@@ -1,24 +1,27 @@
 current = 21
-sizes = [32, 64]
+png_size = 10
 
 [[board]]
 year = 21
 hex = 0xb21b21
-filled_in = true
-fat = true
+fat = false
 
 [[board]]
 year = 20
 hex = 0xfa6b20
+fat = false
 
 [[board]]
 year = 19
 hex = 0x197052
+fat = false
 
 [[board]]
 year = 18
 hex = 0x61518f
+fat = true
 
 [[board]]
 year = 17
 hex = 0x29738f
+fat = true

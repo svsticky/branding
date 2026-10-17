@@ -1,28 +1,24 @@
-use std::{fs::create_dir, path::PathBuf};
-
 use usvg::Transform;
 
-use crate::config::BoardState;
-
-pub fn render_pngs(config: &BoardState, svgs: Vec<(&'static str, &str)>, sizes: Vec<u32>, save_path: &PathBuf) {
-    for (year, hex) in config.map.read().unwrap().iter() {
-        let hex = format!("{:06x}", hex & 0xFFFFFF);
+// pub fn render_pngs(config: &BoardState, svgs: Vec<(&'static str, &str)>, sizes: Vec<u32>, save_path: &PathBuf) {
+//     for (year, hex) in config.map.read().unwrap().iter() {
+//         let hex = format!("{:06x}", hex & 0xFFFFFF);
         
-        let mut year_path = save_path.clone();
-        year_path.push(format!("{year}"));
-        create_dir(&year_path).unwrap();
+//         let mut year_path = save_path.clone();
+//         year_path.push(format!("{year}"));
+//         create_dir(&year_path).unwrap();
         
-        for (svg_data, svg_name) in &svgs {
-            for size in &sizes {
-                let svg_data_replaced = svg_data.replace("DEADBEEF", &hex);
-                render_png(&svg_data_replaced, svg_name, *size, &year_path);
-            }
-        }
-    }
-}
+//         for (svg_data, svg_name) in &svgs {
+//             for size in &sizes {
+//                 let svg_data_replaced = svg_data.replace("DEADBEEF", &hex);
+//                 render_png(&svg_data_replaced, svg_name, *size, &year_path);
+//             }
+//         }
+//     }
+// }
 
 
-fn render_png(svg_data: &str, name: &str, size: u32, save_path: &PathBuf) {
+pub fn render_png(svg_data: &str, size: u32, save_filename: &String) {
     let tree = {
         let mut opt = usvg::Options::default();
         opt.fontdb_mut().load_system_fonts();
@@ -39,9 +35,5 @@ fn render_png(svg_data: &str, name: &str, size: u32, save_path: &PathBuf) {
         &mut pixmap.as_mut(),
     );
 
-    let mut save_path = save_path.clone();
-    save_path.push(format!("{name}_{size}.png"));
-
-    dbg!(&save_path);
-    pixmap.save_png(save_path).unwrap();
+    pixmap.save_png(save_filename).unwrap();
 }

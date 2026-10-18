@@ -5,10 +5,10 @@ use xmltree::{Element, Error, XMLNode};
 use crate::{ColorVersion, Format};
 
 pub fn render_svg<W: Write>(
-    input: &String,
+    input: &str,
     color_version: ColorVersion,
     format: Format,
-    board_color: &String,
+    board_color: &str,
     draw_fat: bool,
     writer: W
 ) -> Result<(), Error> {
@@ -78,13 +78,13 @@ pub fn render_svg<W: Write>(
         .get_mut_child("style").unwrap();
 
     style_tag.children = vec![
-        XMLNode::Text(CSS_STRING.replacen("<BOARD_COLOR>", &board_color, 1))
+        XMLNode::Text(CSS_STRING.replacen("<BOARD_COLOR>", board_color, 1))
     ];
 
     svg.write(writer)
 }
 
-const CSS_STRING: &'static str = r#"
+const CSS_STRING: &str = r#"
     .board-color {
         fill: <BOARD_COLOR>;
     }

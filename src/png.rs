@@ -18,7 +18,7 @@ use usvg::Transform;
 // }
 
 
-pub fn render_png(svg_data: &str, size: u32, save_filename: &String) {
+pub fn render_png(svg_data: &str, size: u32, save_filename: &str) {
     let tree = {
         let mut opt = usvg::Options::default();
         opt.fontdb_mut().load_system_fonts();

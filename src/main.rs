@@ -1,3 +1,4 @@
+use std::env;
 use std::io::{Read, Write};
 use std::fs::{File, OpenOptions, create_dir_all};
 use std::process::Command;
@@ -88,18 +89,18 @@ impl Format {
 
 fn write_to_file(filename: String, content: String) {
     let mut file = OpenOptions::new()
-        .write(true).create(true)
+        .write(true).create(true).truncate(true)
         .open(&filename).unwrap();
 
-    file.write(&mut content.as_bytes()).unwrap();
+    file.write_all(content.as_bytes()).unwrap();
 }
 
 fn render_svg_png(
-    xml: &String,
+    xml: &str,
     color_versions: &[ColorVersion],
     formats: &[Format],
-    basepath: &String,
-    color: &String,
+    basepath: &str,
+    color: &str,
     draw_fat: bool,
     png_size: u32
 ) {
@@ -116,7 +117,7 @@ fn render_svg_png(
             let filename_png = format!("{basepath}/logo_{format_string}_{color_string}.png");
 
             let writer = OpenOptions::new()
-                .write(true).create(true)
+                .write(true).create(true).truncate(true)
                 .open(&filename_svg).unwrap();
             render_svg(xml, *color_version, *format, color, draw_fat, writer).unwrap();
 
@@ -130,8 +131,10 @@ fn render_svg_png(
 }
 
 fn main() {
-    dotenv::dotenv().unwrap();
-    let storage_path = dotenv::var("STORAGE_PATH").unwrap();
+    // Read from .env
+    let _ = dotenv::dotenv();
+
+    let storage_path = env::var("STORAGE_PATH").expect("environment variable STORAGE_PATH not found.");
     
     const COLOR_VERSIONS: [ColorVersion; 2] = [
         ColorVersion::TextBlack,
@@ -181,5 +184,5 @@ fn main() {
 
     let should_draw_fat = config.map.get(&config.current).unwrap().1;
     
-    render_svg_png(&xml, &[ColorVersion::AllWhite, ColorVersion::AllBlack], &FORMATS, &storage_path, &"".into(), should_draw_fat, config.png_size);
+    render_svg_png(&xml, &[ColorVersion::AllWhite, ColorVersion::AllBlack], &FORMATS, &storage_path, "", should_draw_fat, config.png_size);
 }

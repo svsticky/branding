@@ -2,14 +2,14 @@ use std::io::Write;
 
 use xmltree::{Element, Error, XMLNode};
 
-use crate::{ColorVersion, Format};
+use crate::{ColorVersion, Format, config::Version};
 
 pub fn render_svg<W: Write>(
     input: &str,
     color_version: ColorVersion,
     format: Format,
     board_color: &str,
-    draw_fat: bool,
+    version: Version,
     writer: W
 ) -> Result<(), Error> {
     let mut svg = Element::parse(input.as_bytes()).unwrap();
@@ -24,14 +24,17 @@ pub fn render_svg<W: Write>(
         }
 
         // Only keep it if the classList includes the size
-        let class_string = format.to_class_string();
-        let thickness_remove = if draw_fat { "thin" } else { "fat" };
         let classes = node.attributes
             .get("class").unwrap()
             .split(" ")
             .collect::<Vec<_>>();
 
-        classes.contains(&class_string) && !classes.contains(&thickness_remove)
+        if classes.contains(&"version-dependent") && !classes.contains(&version.to_class_string()) {
+            return false;
+        }
+
+        let class_string = format.to_class_string();
+        classes.contains(&class_string)
     });
 
     // Remove unneeded data and inject color classes
@@ -54,6 +57,13 @@ pub fn render_svg<W: Write>(
             *node.attributes.get_mut("class").unwrap() = color_version.to_hoofd_class();
         } else if classes.contains(&"text") {
             *node.attributes.get_mut("class").unwrap() = color_version.to_text_class();
+        }
+
+        // Color the outline of the central icon
+        else if classes.contains(&"outline") && version == Version::Infill {
+            *node.attributes.get_mut("class").unwrap() = color_version.to_text_class();
+        } else if classes.contains(&"outline") {
+            *node.attributes.get_mut("class").unwrap() = color_version.to_hoofd_class();
         }
     });
 

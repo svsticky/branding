@@ -1,27 +1,113 @@
-current = 21
+current = "b21"
 png_size = 1000
 
 [[board]]
-year = 21
+year = "b21"
 hex = 0xb21b21
-fat = false
+version = "thin"
 
 [[board]]
-year = 20
+year = "b20"
 hex = 0xfa6b20
-fat = false
+version = "thin"
 
 [[board]]
-year = 19
+year = "b19"
 hex = 0x197052
-fat = false
+version = "thin"
 
 [[board]]
-year = 18
+year = "b19_old"
+hex = 0x197052
+version = "fat"
+
+[[board]]
+year = "b18"
 hex = 0x61518f
-fat = true
+version = "fat"
 
 [[board]]
-year = 17
+year = "b17"
 hex = 0x29738f
 fat = true
+version = "fat"
+
+[[board]]
+year = "b16"
+hex = 0x800816
+version = "fat"
+
+[[board]]
+year = "b15"
+hex = 0xfe7215
+version = "fat"
+
+[[board]]
+year = "b14"
+hex = 0xc53f78
+version = "infill"
+
+[[board]]
+year = "b13"
+hex = 0x20730d
+version = "infill"
+
+[[board]]
+year = "b12"
+hex = 0x26276d
+version = "infill"
+
+[[board]]
+year = "b11"
+hex = 0xce2029
+version = "infill"
+
+[[board]]
+year = "b10"
+hex = 0xff7f00
+version = "infill"
+
+[[board]]
+year = "b9"
+hex = 0x55bfed
+version = "infill"
+
+[[board]]
+year = "b8"
+hex = 0x4b2c84
+version = "infill"
+
+[[board]]
+year = "b7"
+hex = 0x77101a
+version = "infill"
+
+[[board]]
+year = "b6"
+hex = 0x4169e1
+version = "infill"
+
+[[board]]
+year = "b5"
+hex = 0xff7f00
+version = "infill"
+
+[[board]]
+year = "b4"
+hex = 0xb7e093
+version = "infill"
+
+[[board]]
+year = "b3"
+hex = 0x950423
+version = "infill"
+
+[[board]]
+year = "b2"
+hex = 0xe85276
+version = "infill"
+
+[[board]]
+year = "b1"
+hex = 0xff7f00
+version = "infill"

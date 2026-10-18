@@ -5,25 +5,45 @@ use serde::Deserialize;
 
 #[derive(Deserialize)]
 #[derive(Debug)]
+#[derive(Clone, Copy)]
+#[derive(PartialEq, Eq)]
+pub enum Version {
+    #[serde(alias = "fat"   )] Fat,
+    #[serde(alias = "thin"  )] Thin,
+    #[serde(alias = "infill")] Infill,
+}
+
+impl Version {
+    pub fn to_class_string<'a>(self) -> &'a str {
+        match self {
+            Version::Fat => "fat",
+            Version::Thin => "thin",
+            Version::Infill => "infill",
+        }
+    }
+}
+
+#[derive(Deserialize)]
+#[derive(Debug)]
 #[derive(Clone)]
 pub struct BoardEntry {
-    year: u16,
-    fat: bool,
+    year: String,
+    version: Version,
     hex: u32,
 }
 
 #[derive(Deserialize)]
 #[derive(Debug)]
 pub struct Config {
-    current: u16,
+    current: String,
     png_size: u32,
     board: Vec<BoardEntry>,
 }
 
 pub struct BoardState {
-    pub current: u16,
+    pub current: String,
     pub png_size: u32,
-    pub map: HashMap<u16, (u32, bool)>,
+    pub map: HashMap<String, (u32, Version)>,
 }
 
 pub fn get_board_color_hex(color: u32) -> String {
@@ -46,7 +66,7 @@ pub fn read_config(path: String) -> BoardState {
     let config = toml::from_str::<Config>(&buf).unwrap();
     let current_board = config.current;
     let map = config.board.into_iter().map(|it| {
-        (it.year, (it.hex, it.fat))
+        (it.year, (it.hex, it.version))
     }).collect::<HashMap<_,_>>();
 
     BoardState {

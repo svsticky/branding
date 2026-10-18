@@ -4,7 +4,7 @@ use std::fs::{File, OpenOptions, create_dir_all};
 use std::process::Command;
 
 use crate::png::render_png;
-use crate::config::{get_board_color_hex, get_board_color_rgb, read_config};
+use crate::config::{Version, get_board_color_hex, get_board_color_rgb, read_config};
 use crate::svg::render_svg;
 
 mod config;
@@ -101,7 +101,7 @@ fn render_svg_png(
     formats: &[Format],
     basepath: &str,
     color: &str,
-    draw_fat: bool,
+    version: Version,
     png_size: u32
 ) {
     for color_version in color_versions {
@@ -119,7 +119,7 @@ fn render_svg_png(
             let writer = OpenOptions::new()
                 .write(true).create(true).truncate(true)
                 .open(&filename_svg).unwrap();
-            render_svg(xml, *color_version, *format, color, draw_fat, writer).unwrap();
+            render_svg(xml, *color_version, *format, color, version, writer).unwrap();
 
 
             // PNG
@@ -152,14 +152,14 @@ fn main() {
 
     let config = read_config("config.toml".into());
     
-    for (year, (color, fat)) in &config.map {
+    for (year, (color, version)) in &config.map {
         dbg!(year);
         
         let board_color = get_board_color_hex(*color);
         create_dir_all(format!("{storage_path}/{year}")).unwrap();
 
         // Create SVG and PNG files
-        render_svg_png(&xml, &COLOR_VERSIONS, &FORMATS, &format!("{storage_path}/{year}"), &board_color, *fat, config.png_size);
+        render_svg_png(&xml, &COLOR_VERSIONS, &FORMATS, &format!("{storage_path}/{year}"), &board_color, *version, config.png_size);
 
         // Create CSS and JSON files
         let buf = format!(":root {{\n  --board-color: {board_color};\n}}");

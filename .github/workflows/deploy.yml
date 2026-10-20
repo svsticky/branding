@@ -17,10 +17,8 @@ jobs:
       run: cargo test
     - name: Compile and run
       run: cargo run --release
-    - name: Create tarball
-      run: tar vcf output.tar output/
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: output.tar
-        path: ./output.tar
+        name: output-files
+        path: output/

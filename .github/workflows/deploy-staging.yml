@@ -1,0 +1,35 @@
+name: Create output for staging
+
+on:
+  workflow_dispatch: # For manual dispatch on GitHub, and webhooks
+
+env:
+  STORAGE_PATH: output/
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Compile and run
+      run: cargo run --release
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: output-files
+        path: output/
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    name: Notify server of new artifact
+    needs: build
+    runs-on: ubuntu-latest
+    environment: 'staging'
+
+    steps:
+      - name: Trigger deploy on server  # Triggers a webhook on our server, handled by Aas (svsticky/aas)
+        uses: distributhor/workflow-webhook@v3
+        env:
+          webhook_url:    ${{ vars.AAS_URL }}
+          webhook_secret: ${{ secrets.AAS_PRE_SHARED_KEY }}
